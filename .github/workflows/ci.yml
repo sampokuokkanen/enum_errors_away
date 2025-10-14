@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: '3.3'
+            rails: '8.0'
+          - ruby: '3.3'
+            rails: 'main'
+          - ruby: '3.4'
+            rails: '8.0'
+          - ruby: '3.4'
+            rails: 'main'
+          - ruby: 'head'
+            rails: '8.0'
+            experimental: true
+          - ruby: 'head'
+            rails: 'main'
+            experimental: true
+    continue-on-error: ${{ matrix.experimental == true }}
+
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: false
+
+    - name: Display Ruby and Bundler versions
+      run: |
+        ruby -v
+        gem -v
+        bundle -v
+
+    - name: Update Gemfile for Rails version
+      run: |
+        if [ "${{ matrix.rails }}" = "main" ]; then
+          echo "Using Rails main branch"
+          cat >> Gemfile <<EOF
+
+          # Override for CI testing
+          gem 'rails', github: 'rails/rails', branch: 'main'
+          gem 'activerecord', github: 'rails/rails', branch: 'main'
+          EOF
+        else
+          echo "Using Rails ${{ matrix.rails }}"
+          cat >> Gemfile <<EOF
+
+          # Override for CI testing
+          gem 'rails', '~> ${{ matrix.rails }}.0'
+          gem 'activerecord', '~> ${{ matrix.rails }}.0'
+          EOF
+        fi
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
+    - name: Run tests
+      run: bundle exec rake test
+
+    - name: Check gem can be built
+      run: gem build enum_errors_away.gemspec
