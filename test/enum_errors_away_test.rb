@@ -1,4 +1,6 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class CreateOrganizations < ActiveRecord::Migration[7.0]
   def change
@@ -11,57 +13,57 @@ end
 
 class EnumErrorsAwayTest < Minitest::Test
   def setup
-    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS organizations")
+    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS organizations')
     CreateOrganizations.new.change
   end
 
   def teardown
-    ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS organizations")
+    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS organizations')
   end
 
   def test_version_number
     refute_nil ::EnumErrorsAway::VERSION
   end
 
-  def test_enum_works_without_column_when_gem_enabled
+  def test_enum_works_without_column_when_gem_enabled # rubocop:todo Metrics/MethodLength
     EnumErrorsAway.enabled = true
 
     # Create a fresh class to avoid conflicts
     test_class = Class.new(ActiveRecord::Base) do
-      self.table_name = "organizations"
+      self.table_name = 'organizations'
     end
 
     test_class.enum(:mbo_evaluation_create_condition, {
-      never: 0,
-      always: 1,
-      conditional: 2
-    })
+                      never: 0,
+                      always: 1,
+                      conditional: 2
+                    })
 
     org = test_class.new
     org.mbo_evaluation_create_condition = :always
-    assert_equal "always", org.mbo_evaluation_create_condition
+    assert_equal 'always', org.mbo_evaluation_create_condition
     assert org.always?
   end
 
-  def test_enum_still_works_with_column_present
+  def test_enum_still_works_with_column_present # rubocop:todo Metrics/MethodLength
     EnumErrorsAway.enabled = true
 
     ActiveRecord::Base.connection.execute(
-      "ALTER TABLE organizations ADD COLUMN mbo_evaluation_create_condition INTEGER"
+      'ALTER TABLE organizations ADD COLUMN mbo_evaluation_create_condition INTEGER'
     )
 
     test_class = Class.new(ActiveRecord::Base) do
-      self.table_name = "organizations"
+      self.table_name = 'organizations'
     end
 
     test_class.enum(:mbo_evaluation_create_condition, {
-      never: 0,
-      always: 1,
-      conditional: 2
-    })
+                      never: 0,
+                      always: 1,
+                      conditional: 2
+                    })
 
-    org = test_class.create!(name: "Test Org", mbo_evaluation_create_condition: :conditional)
-    assert_equal "conditional", org.mbo_evaluation_create_condition
+    org = test_class.create!(name: 'Test Org', mbo_evaluation_create_condition: :conditional)
+    assert_equal 'conditional', org.mbo_evaluation_create_condition
     assert org.conditional?
   end
 
@@ -94,39 +96,58 @@ class EnumErrorsAwayTest < Minitest::Test
     EnumErrorsAway.enabled = true
   end
 
-  def test_enum_with_hash_syntax
+  def test_enum_with_hash_syntax # rubocop:todo Metrics/MethodLength
     EnumErrorsAway.enabled = true
 
     test_class = Class.new(ActiveRecord::Base) do
-      self.table_name = "organizations"
+      self.table_name = 'organizations'
     end
 
     test_class.enum(:mbo_evaluation_create_condition, {
-      never: 0,
-      always: 1,
-      conditional: 2
-    })
+                      never: 0,
+                      always: 1,
+                      conditional: 2
+                    })
 
     org = test_class.new
     org.mbo_evaluation_create_condition = :always
-    assert_equal "always", org.mbo_evaluation_create_condition
+    assert_equal 'always', org.mbo_evaluation_create_condition
   end
 
-  def test_enum_with_options
+  def test_enum_with_options # rubocop:todo Metrics/MethodLength
     EnumErrorsAway.enabled = true
 
     test_class = Class.new(ActiveRecord::Base) do
-      self.table_name = "organizations"
+      self.table_name = 'organizations'
     end
 
     test_class.enum(:mbo_evaluation_create_condition, {
-      never: 0,
-      always: 1,
-      conditional: 2
-    }, prefix: true)
+                      never: 0,
+                      always: 1,
+                      conditional: 2
+                    }, prefix: true)
 
     org = test_class.new
     org.mbo_evaluation_create_condition = :always
     assert org.respond_to?(:mbo_evaluation_create_condition_always?)
+  end
+
+  def test_enum_method_collision_error_not_suppressed # rubocop:todo Metrics/MethodLength
+    EnumErrorsAway.enabled = true
+
+    test_class = Class.new(ActiveRecord::Base) do
+      self.table_name = 'organizations'
+    end
+
+    # Define first enum with a value that creates a method
+    test_class.enum(:status, { available: 0, unavailable: 1 })
+
+    # Try to define second enum that would create a conflicting method
+    error = assert_raises(ArgumentError) do
+      test_class.enum(:availability, { available: 0, unavailable: 1 })
+    end
+
+    # Verify we get the method collision error, not something suppressed
+    assert_match(/already defined by another enum/, error.message)
   end
 end

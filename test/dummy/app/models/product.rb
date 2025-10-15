@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Product < ApplicationRecord
   # Test enum with scopes option
   enum :availability, {
@@ -8,9 +10,9 @@ class Product < ApplicationRecord
 
   # Test enum with string values
   enum :category, {
-    electronics: "electronics",
-    clothing: "clothing",
-    books: "books",
-    home: "home"
+    electronics: 'electronics',
+    clothing: 'clothing',
+    books: 'books',
+    home: 'home'
   }
 end

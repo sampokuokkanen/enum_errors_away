@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+
+module Rails
+  class Railtie
+    def self.initializer: (String name, ?before: String, ?after: String) { () -> void } -> void
+  end
+
+  def self.env: () -> untyped
+  def self.logger: () -> untyped
+end
+
+module ActiveSupport
+  module Concern
+    def self.extended: (Module base) -> void
+
+    # Instance method available when a module extends Concern
+    def included: (Module base) -> void
+    def class_methods: () { () -> void } -> void
+    def module_function: (*Symbol) -> void
+  end
+
+  def self.on_load: (Symbol component) { () -> void } -> void
+end
+
+module ActiveRecord
+  class Base
+    def self.include: (Module mod) -> void
+    def self.attribute: (Symbol | String name, Symbol type, **untyped options) -> void
+    def self.attribute_types: () -> Hash[String, untyped]
+    def self.columns_hash: () -> Hash[String, untyped]
+    def self.enum: (Symbol | String name, ?Array[Symbol] | Hash[Symbol, Integer] | nil values, **untyped options) -> void
+  end
+
+  class StatementInvalid < StandardError
+  end
+
+  class ConnectionNotEstablished < StandardError
+  end
+end

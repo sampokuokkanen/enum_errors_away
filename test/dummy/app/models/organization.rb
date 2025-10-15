@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Organization < ApplicationRecord
   # Test enum without a database column - the gem should handle this
   enum :status, {

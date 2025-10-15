@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+module EnumErrorsAway
+  VERSION: String
+
+  @enabled: bool
+
+  def self.enabled: () -> bool
+  def self.enabled?: () -> bool
+  def self.enabled=: (bool value) -> bool
+  def self.configure: () { (singleton(EnumErrorsAway)) -> void } -> void
+
+  module ActiveRecordExtension : ActiveSupport::Concern
+    def self.class_methods: () { () -> void } -> void
+
+    def enum: (Symbol | String name, ?Array[Symbol] | Hash[Symbol, Integer] | nil values, **untyped options) -> void
+    def attribute: (Symbol | String name, Symbol type, **untyped options) -> void
+    def attribute_types: () -> Hash[String, untyped]
+    def columns_hash: () -> Hash[String, untyped]
+  end
+
+  class Railtie < Rails::Railtie
+  end
+end

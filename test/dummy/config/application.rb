@@ -1,7 +1,9 @@
-require 'rails/all'
+# frozen_string_literal: true
 
+require 'rails/all'
+require 'bundler/setup'
 Bundler.require(*Rails.groups)
-require "enum_errors_away"
+require 'enum_errors_away'
 
 module Dummy
   class Application < Rails::Application
