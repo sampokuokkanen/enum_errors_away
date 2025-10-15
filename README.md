@@ -12,8 +12,8 @@ Rails 7.2+ requires enum attributes to be declared with a type when they don't h
 ```ruby
 # Your model defines multiple enums
 class Organization < ApplicationRecord
-  enum status: { active: 0, inactive: 1 }
-  enum billing_plan: { free: 0, paid: 1 }
+  enum :status, { active: 0, inactive: 1 }
+  enum :billing_plan, { free: 0, paid: 1 }
 end
 
 # db/migrate/20240101_add_status_to_organizations.rb
@@ -52,7 +52,7 @@ The gem:
 - ✅ **Zero configuration required** - works out of the box
 - ✅ **Type-safe** - includes RBS type definitions for Steep/TypeProf
 - ✅ **Fully tested** - comprehensive test suite
-- ✅ **Rails 6.0+ compatible**
+- ✅ **Rails 7.2+ compatible**
 
 ## Installation
 
@@ -81,8 +81,8 @@ Once installed, the gem automatically works for all ActiveRecord models. No conf
 ### Before (Rails 7.2+ without this gem):
 ```ruby
 class Organization < ApplicationRecord
-  enum status: { active: 0, inactive: 1 }           # Added in first migration
-  enum billing_plan: { free: 0, paid: 1 }            # Added in second migration
+  enum :status, { active: 0, inactive: 1 }           # Added in first migration
+  enum :billing_plan, { free: 0, paid: 1 }            # Added in second migration
 end
 
 # Running the first migration fails because billing_plan column doesn't exist yet!
@@ -92,8 +92,8 @@ end
 ### After (with this gem):
 ```ruby
 class Organization < ApplicationRecord
-  enum status: { active: 0, inactive: 1 }
-  enum billing_plan: { free: 0, paid: 1 }
+  enum :status, { active: 0, inactive: 1 }
+  enum :billing_plan, { free: 0, paid: 1 }
 end
 
 # Migrations run successfully - attributes are automatically declared as integers
@@ -107,16 +107,16 @@ end
 ```ruby
 class User < ApplicationRecord
   # Hash syntax
-  enum status: { active: 0, inactive: 1 }
+  enum :status, { active: 0, inactive: 1 }
 
   # Array syntax
-  enum role: [:admin, :user, :guest]
+  enum :role, [:admin, :user, :guest]
 
   # With options
-  enum access_level: { basic: 0, premium: 1 }, prefix: true
+  enum :access_level, { basic: 0, premium: 1 }, prefix: true
 
-  # Rails 7+ syntax
-  enum visibility: { public: 0, private: 1 }, scopes: false
+  # With Rails 7.2+ options
+  enum :visibility, { public: 0, private: 1 }, scopes: false
 end
 ```
 
@@ -126,10 +126,10 @@ The gem **only suppresses** the "Undeclared attribute type" error. Other enum er
 
 ```ruby
 class Organization < ApplicationRecord
-  enum status: { available: 0, unavailable: 1 }
+  enum :status, { available: 0, unavailable: 1 }
 
   # This will correctly raise an error about method collision
-  enum availability: { available: 0, unavailable: 1 }
+  enum :availability, { available: 0, unavailable: 1 }
   # ArgumentError: already defined by another enum
 end
 ```
@@ -175,9 +175,9 @@ Here's the typical scenario this gem solves:
 ```ruby
 # app/models/organization.rb
 class Organization < ApplicationRecord
-  enum status: { active: 0, inactive: 1 }        # Added May 2024
-  enum billing_plan: { free: 0, paid: 1 }        # Added June 2024
-  enum notification_preference: { email: 0, sms: 1, both: 2 }  # Added July 2024
+  enum :status, { active: 0, inactive: 1 }        # Added May 2024
+  enum :billing_plan, { free: 0, paid: 1 }        # Added June 2024
+  enum :notification_preference, { email: 0, sms: 1, both: 2 }  # Added July 2024
 end
 
 # db/migrate/20240501_add_status_to_organizations.rb
@@ -218,8 +218,7 @@ end
 ## Compatibility
 
 - **Ruby**: 3.1+
-- **Rails**: 6.0+
-- **Recommended**: Rails 7.2+ (where this problem is most common)
+- **Rails**: 7.2+
 
 ## Development
 
