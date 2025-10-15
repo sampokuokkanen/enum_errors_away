@@ -1,6 +1,6 @@
 # EnumErrorsAway
 
-[![CI](https://github.com/yourusername/enum_errors_away/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/enum_errors_away/actions/workflows/ci.yml)
+[![CI](https://github.com/sampokuokkanen/enum_errors_away/actions/workflows/ci.yml/badge.svg)](https://github.com/sampokuokkanen/enum_errors_away/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/enum_errors_away.svg)](https://badge.fury.io/rb/enum_errors_away)
 
 **Fix Rails 7.2+ enum migration failures** - EnumErrorsAway eliminates "Undeclared attribute type for enum" errors that break migrations when enum columns are added in separate migrations.
@@ -251,7 +251,7 @@ bundle exec rake test
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/yourusername/enum_errors_away.
+Bug reports and pull requests are welcome on GitHub at https://github.com/sampokuokkanen/enum_errors_away.
 
 ## License
 

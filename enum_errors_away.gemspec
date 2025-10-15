@@ -5,14 +5,14 @@ require_relative 'lib/enum_errors_away/version'
 Gem::Specification.new do |spec|
   spec.name          = 'enum_errors_away'
   spec.version       = EnumErrorsAway::VERSION
-  spec.authors       = ['Your Name']
-  spec.email         = ['your.email@example.com']
+  spec.authors       = ['Sampo Kuokkanen']
+  spec.email         = ['sampokuokkanen@gmail.com']
 
   spec.summary       = 'Fix Rails 7.2+ enum migration failures'
   spec.description   = 'Eliminates "Undeclared attribute type for enum" errors that occur when running ' \
                        'migrations with multiple enum columns added in separate migrations. Automatically ' \
                        'declares missing enum attributes as integers, preventing migration failures.'
-  spec.homepage      = 'https://github.com/yourusername/enum_errors_away'
+  spec.homepage      = 'https://github.com/sampokuokkanen/enum_errors_away'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 3.1.0'
 
