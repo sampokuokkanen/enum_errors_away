@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'enum_errors_away'
   spec.version       = EnumErrorsAway::VERSION
   spec.authors       = ['Sampo Kuokkanen']
-  spec.email         = ['sampokuokkanen@gmail.com']
+  spec.email         = ['sampo.kuokkanen@gmail.com']
 
   spec.summary       = 'Fix Rails 7.2+ enum migration failures'
   spec.description   = 'Eliminates "Undeclared attribute type for enum" errors that occur when running ' \

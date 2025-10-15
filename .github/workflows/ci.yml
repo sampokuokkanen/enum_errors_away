@@ -53,16 +53,16 @@ jobs:
           echo "Using Rails main branch"
           cat >> Gemfile <<'EOF'
 
-# Override for CI testing
-gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'activerecord', github: 'rails/rails', branch: 'main'
-EOF
+        # Override for CI testing
+        gem 'rails', github: 'rails/rails', branch: 'main'
+        gem 'activerecord', github: 'rails/rails', branch: 'main'
+        EOF
         else
           echo "Using Rails ${{ matrix.rails }}"
           cat >> Gemfile <<'EOF'
 
-# Override for CI testing
-EOF
+        # Override for CI testing
+        EOF
           echo "gem 'rails', '~> ${{ matrix.rails }}.0'" >> Gemfile
           echo "gem 'activerecord', '~> ${{ matrix.rails }}.0'" >> Gemfile
         fi
