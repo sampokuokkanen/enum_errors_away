@@ -132,7 +132,7 @@ class EnumErrorsAwayTest < Minitest::Test
     assert org.respond_to?(:mbo_evaluation_create_condition_always?)
   end
 
-  def test_enum_method_collision_error_not_suppressed # rubocop:todo Metrics/MethodLength
+  def test_enum_method_collision_error_not_suppressed
     EnumErrorsAway.enabled = true
 
     test_class = Class.new(ActiveRecord::Base) do

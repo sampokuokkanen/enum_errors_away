@@ -20,10 +20,13 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = spec.homepage
   spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
 
-  # Note: sig/ directory is intentionally excluded from distribution to avoid conflicts with user's type definitions
+  # NOTE: sig/ directory is intentionally excluded from distribution to avoid conflicts with user's type definitions
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir['{lib,sig}/**/*', 'LICENSE.txt', 'README.md', 'CHANGELOG.md'].reject do |f|
-      f.start_with?('sig/dev/') || !File.file?(f)
+      # explicitly reject development, test, package, log, and CI files/dirs
+      f.start_with?('sig/dev/', 'test/', 'test/dummy/', 'pkg/', 'dev/', 'log/', '.github/', 'dummy/') ||
+        !File.file?(f) ||
+        %w[Gemfile Rakefile .gitignore .gitattributes].include?(File.basename(f))
     end
   end
   spec.require_paths = ['lib']
