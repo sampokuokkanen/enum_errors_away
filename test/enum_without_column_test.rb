@@ -86,7 +86,6 @@ class EnumWithoutColumnTest < ActiveSupport::TestCase
   end
 
   test 'invalid enum value raises error even without database column' do
-    skip 'Rails 8 behavior for invalid enum values may vary'
     model = TestModel.new(name: 'Test')
 
     assert_raises(ArgumentError) do
@@ -124,11 +123,5 @@ class EnumWithoutColumnTest < ActiveSupport::TestCase
     # But after reloading, it's lost because there's no database column
     reloaded = TestModel.find(model.id)
     assert_nil reloaded.status # No column = no persistence
-  end
-
-  test 'gem can be disabled to restore original Rails behavior' do
-    skip 'Disabling gem behavior is hard to test in current setup'
-    # This test is skipped because once ActiveRecordExtension is loaded,
-    # it's difficult to test the original Rails behavior in the same process
   end
 end
