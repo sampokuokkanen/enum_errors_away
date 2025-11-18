@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 2025-11-18
+
+### Changed
+
+- Move ActiveRecord extension inclusion to Railtie initializer for better Rails integration. Sometimes got an error when running tests the first time, but passed on subsequent runs. This will hopefully fix that issue.
+
 ## [0.2.0] - 2025-10-16
 
 ### Changed
