@@ -65,7 +65,3 @@ module EnumErrorsAway
     end
   end
 end
-
-ActiveSupport.on_load(:active_record) do
-  ActiveRecord::Base.include(EnumErrorsAway::ActiveRecordExtension)
-end

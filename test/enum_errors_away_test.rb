@@ -150,4 +150,21 @@ class EnumErrorsAwayTest < Minitest::Test
     # Verify we get the method collision error, not something suppressed
     assert_match(/already defined by another enum/, error.message)
   end
+
+  def test_old_keyword_arg_enum_syntax_still_errors
+    EnumErrorsAway.enabled = true
+
+    test_class = Class.new(ActiveRecord::Base) do
+      self.table_name = 'organizations'
+    end
+
+    # Old deprecated syntax: enum name as keyword argument
+    # This should raise an error - the gem should NOT enable this deprecated syntax
+    error = assert_raises(ArgumentError) do
+      test_class.enum(status: { active: 0, archived: 1 })
+    end
+
+    # Verify we get an appropriate error about the deprecated syntax
+    assert_match(/wrong number of arguments/, error.message)
+  end
 end
