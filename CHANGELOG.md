@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1] - 2025-11-28
+
+### Fixed
+
+- Catch `RuntimeError` in addition to `ArgumentError` for enum attribute type errors. Rails 8 raises `RuntimeError` for undeclared enum attributes during schema loading, which was causing the first test run to fail.
+
 ## [0.3.0] - 2025-11-18
 
 ### Changed

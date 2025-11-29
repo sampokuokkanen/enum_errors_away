@@ -44,7 +44,7 @@ module EnumErrorsAway
         # Call the original enum method
         begin
           super(name, values, **options)
-        rescue ArgumentError => e
+        rescue ArgumentError, RuntimeError => e
           raise e unless e.message.include?('Undeclared attribute type for enum')
 
           # Fallback: declare missing attributes and retry
