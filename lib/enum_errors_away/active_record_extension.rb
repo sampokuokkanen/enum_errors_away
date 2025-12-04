@@ -27,37 +27,36 @@ module EnumErrorsAway
                         { name => values }
                       end
 
-        # Pre-declare attributes for enum names that don't exist as columns
+        # Pre-declare attributes for enum names that don't have a database column.
+        # We check columns_hash to avoid overriding the column's type.
         definitions.each do |enum_name, enum_values|
           next if enum_name.nil? || enum_name.to_s.empty?
-          next if enum_values.nil?
 
           begin
             enum_name_str = enum_name.to_s
-            # @type var enum_name: Symbol | String
-            attribute enum_name, :integer if !attribute_types.key?(enum_name_str) && !columns_hash.key?(enum_name_str)
+            # Only declare attribute if there's no column for it
+            next if columns_hash.key?(enum_name_str)
+
+            # Determine attribute type from enum values:
+            # - If all values are integers (or array), use :integer
+            # - If any value is a string, use :string
+            attr_type = if enum_values.is_a?(Array)
+                          :integer
+                        elsif enum_values.is_a?(Hash) && enum_values.values.any? { |v| v.is_a?(String) }
+                          :string
+                        else
+                          :integer
+                        end
+
+            attribute enum_name, attr_type
           rescue ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished
-            # Ignore database errors during schema introspection
+            # Silently ignore database errors - the enum may fail later,
+            # but that's the expected behavior without this gem
           end
         end
 
         # Call the original enum method
-        begin
-          super(name, values, **options)
-        rescue ArgumentError, RuntimeError => e
-          raise e unless e.message.include?('Undeclared attribute type for enum')
-
-          # Fallback: declare missing attributes and retry
-          definitions.each do |enum_name, enum_values|
-            next if enum_name.nil? || enum_name.to_s.empty?
-            next if enum_values.nil?
-
-            enum_name_str = enum_name.to_s
-            # @type var enum_name: Symbol | String
-            attribute enum_name, :integer unless attribute_types.key?(enum_name_str)
-          end
-          super(name, values, **options)
-        end
+        super(name, values, **options)
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
