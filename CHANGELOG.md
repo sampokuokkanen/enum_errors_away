@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] - 2025-12-05
+
+Change the way we define the fallback. 
+Declare attribute if there's no column for it.
+
 ## [0.3.1] - 2025-11-28
 
 ### Fixed
