@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0] - 2026-04-01
+
+### Fixed
+
+- Handle PostgreSQL native enum columns correctly. When a column has `type: :enum` (created with `t.enum` in migrations), the gem now declares an attribute for it. Previously, the gem skipped all existing columns, but Rails 8 requires explicit attribute declarations for PostgreSQL native enum columns. (Fixes #1)
+
 ## [0.4.0] - 2025-12-05
 
 Change the way we define the fallback. 

@@ -34,8 +34,10 @@ module EnumErrorsAway
 
           begin
             enum_name_str = enum_name.to_s
-            # Only declare attribute if there's no column for it
-            next if columns_hash.key?(enum_name_str)
+            # Only declare attribute if there's no column for it,
+            # OR if the column is a PostgreSQL native enum (type :enum)
+            column = columns_hash[enum_name_str]
+            next if column && column.type != :enum
 
             # Determine attribute type from enum values:
             # - If all values are integers (or array), use :integer
